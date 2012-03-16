@@ -37,7 +37,7 @@ module Waffle
           super url, exchange
         end
 
-        def subscribe(queue = '', &block)
+        def subscribe(queue = '')
           # Create queue...
           @queue = @bunny.queue queue, :durable => true, :auto_delete => true
 
