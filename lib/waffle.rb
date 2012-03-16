@@ -1,4 +1,5 @@
 require 'waffle/version'
+require 'waffle/utils'
 require 'waffle/base'
 require 'waffle/producer'
 require 'waffle/consumer'
