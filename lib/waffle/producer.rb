@@ -1,5 +1,5 @@
 module Waffle
-  class Producer
+  class Producer < Base
 
     def publish(message = '')
       @strategy.publish message

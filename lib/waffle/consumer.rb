@@ -1,8 +1,8 @@
 module Waffle
-  class Consumer
+  class Consumer < Base
 
-    def subscribe(queue = '')
-      @strategy.subscribe queue
+    def subscribe(queue = '', &block)
+      @strategy.subscribe queue, &block
     end
 
   end
