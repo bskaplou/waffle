@@ -15,10 +15,6 @@ module Waffle
 
       class Producer < RabbitMQ::Base
 
-        def initialize(url = nil, exchange = 'unknown_exchnage')
-          super url, exchange
-        end
-
         def publish(message = '')
           @exchange.publish message
         end
@@ -27,17 +23,9 @@ module Waffle
 
       class Consumer < RabbitMQ::Base
 
-        def initialize(url = nil, exchange = 'unknown_exchnage')
-          super url, exchange
-        end
-
         def subscribe(queue = '')
-          # Create queue...
           @queue = @bunny.queue queue, :durable => true, :auto_delete => true
-
-          # ...and attach it to exchange
           @queue.bind @exchange
-
           @queue.subscribe do |message|
             yield message[:payload]
           end
