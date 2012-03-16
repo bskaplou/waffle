@@ -6,14 +6,8 @@ module Waffle
       class Base
 
         def initialize(url = nil, exchange = 'unknown_exchange')
-          @bunny = if url
-            Bunny.new url
-          else
-            Bunny.new
-          end
-
+          @bunny = Bunny.new(url)
           @bunny.start
-
           @exchange = @bunny.exchange exchange
         end
 

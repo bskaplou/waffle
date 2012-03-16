@@ -1,7 +1,9 @@
+require 'yajl'
+
 module Waffle
   class Utils
 
-    self << class
+    class << self
 
       def encode(message = nil)
       end
