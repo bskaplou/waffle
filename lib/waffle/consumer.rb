@@ -1,7 +1,7 @@
 module Waffle
   class Consumer
 
-    def subscribe(queue = 'unknown')
+    def subscribe(queue = '')
       @strategy.subscribe queue
     end
 
