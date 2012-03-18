@@ -5,17 +5,17 @@ module Waffle
     module RabbitMQ
       class Base
 
-        def initialize(url = nil, exchange = 'unknown_exchange')
-          @bunny = Bunny.new(url)
+        def initialize(configuration = nil)
+          @bunny = Bunny.new configuration.url
           @bunny.start
-          @exchange = @bunny.exchange exchange
         end
 
       end
 
       class Producer < RabbitMQ::Base
 
-        def publish(message = '')
+        def publish(flow = 'events', message = '')
+          @exchange = @bunny.exchange exchange
           @exchange.publish message
         end
 
@@ -23,9 +23,11 @@ module Waffle
 
       class Consumer < RabbitMQ::Base
 
-        def subscribe(queue = '')
-          @queue = @bunny.queue queue, :durable => true, :auto_delete => true
+        def subscribe(flow = 'events')
+          @exchange = @bunny.exchange exchange
+          @queue    = @bunny.queue '', :durable => true, :auto_delete => true
           @queue.bind @exchange
+
           @queue.subscribe do |message|
             yield message[:payload]
           end
