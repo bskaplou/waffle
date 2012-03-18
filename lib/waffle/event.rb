@@ -5,7 +5,7 @@ module Waffle
 
       def occured(event_name = 'event', event_data = {})
         @@config   ||= Waffle::Configuration.new
-        @@producer ||= eval("Waffle::Strategies::#{@@config.strategy.capitalize}::Producer").new @@config
+        @@producer ||= eval("Waffle::Strategies::#{@@config.strategy.capitalize}").new @@config
       end
 
     end

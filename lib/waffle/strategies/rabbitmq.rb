@@ -2,38 +2,28 @@ require 'bunny'
 
 module Waffle
   module Strategies
-    module RabbitMQ
-      class Base
+    class Rabbitmq
 
-        def initialize(configuration = nil)
-          @bunny = Bunny.new configuration.url
-          @bunny.start
-        end
-
+      def initialize(configuration = nil)
+        @bunny = Bunny.new configuration.url
+        @bunny.start
       end
 
-      class Producer < RabbitMQ::Base
-
-        def publish(flow = 'events', message = '')
-          @exchange = @bunny.exchange exchange
-          @exchange.publish message
-        end
-
+      def publish(flow = 'events', message = '')
+        @exchange = @bunny.exchange exchange
+        @exchange.publish message
       end
 
-      class Consumer < RabbitMQ::Base
+      def subscribe(flow = 'events')
+        @exchange = @bunny.exchange exchange
+        @queue    = @bunny.queue '', :durable => true, :auto_delete => true
+        @queue.bind @exchange
 
-        def subscribe(flow = 'events')
-          @exchange = @bunny.exchange exchange
-          @queue    = @bunny.queue '', :durable => true, :auto_delete => true
-          @queue.bind @exchange
-
-          @queue.subscribe do |message|
-            yield message[:payload]
-          end
+        @queue.subscribe do |message|
+          yield message[:payload]
         end
-
       end
+
     end
   end
 end
