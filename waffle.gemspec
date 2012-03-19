@@ -15,4 +15,7 @@ Gem::Specification.new do |s|
   s.description = 'Abstract queue sender and receiver'
 
   s.files = `git ls-files`.split("\n")
+
+  s.add_runtime_dependency 'bunny'
+  s.add_runtime_dependency 'yajl-ruby'
 end
