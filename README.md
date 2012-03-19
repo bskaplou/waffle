@@ -1,4 +1,4 @@
-= Waffle
+# Waffle
 
 An abstract flow publisher and subscriber.
 
