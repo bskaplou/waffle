@@ -4,7 +4,7 @@ require 'waffle/utils'
 class UtilsTest < Test::Unit::TestCase
 
   def test_encode
-    encoded_msg = Waffle::Utils.encode({'a' => 1, 'b' => 2})
+    encoded_msg = Waffle::Utils.encode({'b' => 1, 'a' => 2})
     assert_equal encoded_msg, '{"a":1,"b":2}'
   end
 
