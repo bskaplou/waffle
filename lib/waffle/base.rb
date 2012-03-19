@@ -6,7 +6,11 @@ module Waffle
     end
 
     def publish(flow = 'events', message = '')
-      @strategy.publish flow, message
+      begin
+        @strategy.publish flow, message
+      rescue
+        puts 'Hello!'
+      end
     end
 
     def subscribe(flow = '', &block)

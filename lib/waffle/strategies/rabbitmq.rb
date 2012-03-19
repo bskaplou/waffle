@@ -6,6 +6,7 @@ module Waffle
 
       def initialize(configuration = nil)
         raise ArgumentError unless configuration && configuration.is_a?(Waffle::Configuration)
+
         @bunny = Bunny.new configuration.url
         @bunny.start
       end
