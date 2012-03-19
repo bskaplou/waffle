@@ -6,13 +6,14 @@ Gem::Specification.new do |s|
   s.name    = 'waffle'
   s.version = Waffle::VERSION
 
-  s.authors = ['Alexander Lomakin']
-  s.email   = 'alexander.lomakin@gmail.com'
+  s.homepage = 'http://github.com/peanut/waffle'
+  s.authors  = ['Alexander Lomakin']
+  s.email    = 'alexander.lomakin@gmail.com'
 
   s.homepage = ''
 
-  s.summary     = 'Abstract queue sender and receiver'
-  s.description = 'Abstract queue sender and receiver'
+  s.summary     = 'Abstract flow publisher and subscriber'
+  s.description = 'Client part of Patty statistics server'
 
   s.files = `git ls-files`.split("\n")
 
