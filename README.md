@@ -8,7 +8,7 @@ An abstract flow publisher and subscriber.
 
 Insert in your Rails Gemfile:
 
-    gem 'waffle', '~> 0.1.1'
+    gem 'waffle', '~> 0.1.2'
 
 and create config file:
 
