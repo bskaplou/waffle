@@ -9,7 +9,7 @@ module Waffle
       begin
         @strategy.publish flow, message
       rescue
-        puts 'Hello!'
+        nil
       end
     end
 

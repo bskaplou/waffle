@@ -16,7 +16,21 @@ and create config file:
     strategy: rabbitmq
     url: amqp://anyhost.com:5678
 
-or if RabbitMQ local machine
+or if RabbitMQ on local machine
 
     # production.waffle.yml
     strategy: rabbitmq
+
+## Usage
+
+When you want to performan event, just insert this code in place, where it must occur:
+
+    Waffle::Event.occured 'index_page_load'
+
+You can attach meta data to event like this:
+
+    Waffle::Event.occured 'index_page_load', {'user_id' => 13, 'user_name' => 'Joshua'}
+
+or like this:
+
+    Waffle::Event.occured 'index_page_load', 'bingo!'
