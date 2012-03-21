@@ -12,7 +12,7 @@ module Waffle
     end
 
     def transport
-      @transport ||= Waffle::Base.new eval("Waffle::Transports::#{Waffle::Config.transport.capitalize}").new(config)
+      @transport ||= Waffle::Base.new eval("Waffle::Transports::#{Waffle::Config.transport.capitalize}").new
     end
 
     def encoder
