@@ -1,6 +1,6 @@
 require 'waffle/version'
 require 'waffle/base'
-require 'waffle/configuration'
+require 'waffle/config'
 require 'waffle/event'
 
 module Waffle

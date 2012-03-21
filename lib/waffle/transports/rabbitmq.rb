@@ -4,16 +4,13 @@ module Waffle
   module Transports
     class Rabbitmq
 
-      def initialize(configuration = nil)
-        raise ArgumentError unless configuration && configuration.is_a?(Waffle::Configuration)
-
-        @configuration = configuration
-        @bunny = Bunny.new configuration.url
+      def initialize
+        @bunny = Bunny.new Waffle::Config.url
         @bunny.start
       end
 
       def encoder
-        @encoder ||= eval("Waffle::Encoders::#{@configuration.encoder.capitalize}")
+        @encoder ||= eval("Waffle::Encoders::#{Waffle::Config.encoder.capitalize}")
       end
 
       def publish(flow = 'events', message = '')

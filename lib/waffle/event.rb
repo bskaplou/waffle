@@ -11,16 +11,12 @@ module Waffle
       end
     end
 
-    def config
-      @config ||= Waffle::Configuration.new
-    end
-
     def transport
-      @transport ||= Waffle::Base.new eval("Waffle::Transports::#{config.transport.capitalize}").new(config)
+      @transport ||= Waffle::Base.new eval("Waffle::Transports::#{Waffle::Config.transport.capitalize}").new(config)
     end
 
     def encoder
-      @encoder ||= eval("Waffle::Encoders::#{config.encoder.capitalize}")
+      @encoder ||= eval("Waffle::Encoders::#{Waffle::Config.encoder.capitalize}")
     end
 
     def occured(event_name = 'event', event_data = nil)
