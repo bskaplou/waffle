@@ -5,11 +5,11 @@ module Waffle
       class << self
 
         def encode(message = nil)
-          Marshal.dump message
+          ::Marshal.dump message
         end
 
         def decode(message = '')
-          Marshal.restore message
+          ::Marshal.restore message
         end
 
       end

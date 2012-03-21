@@ -13,7 +13,7 @@ module Waffle
       end
 
       def encoder
-        @encoder ||= eval("Waffle::Encoders::#{@configuration.encoder}")
+        @encoder ||= eval("Waffle::Encoders::#{@configuration.encoder.capitalize}")
       end
 
       def publish(flow = 'events', message = '')
