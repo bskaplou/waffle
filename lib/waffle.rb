@@ -4,8 +4,8 @@ require 'waffle/configuration'
 require 'waffle/event'
 
 module Waffle
-  module Strategies
-    autoload :Rabbitmq, 'waffle/strategies/rabbitmq'
+  module Transports
+    autoload :Rabbitmq, 'waffle/transports/rabbitmq'
   end
 
   module Encoders

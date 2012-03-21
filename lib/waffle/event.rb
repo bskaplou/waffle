@@ -30,7 +30,7 @@ module Waffle
 
       event_data.merge!({'occured_at' => Time.now})
 
-      transport.publish event_name, Waffle::Utils.encode(event_data)
+      transport.publish event_name, encoder.encode(event_data)
     end
 
   end

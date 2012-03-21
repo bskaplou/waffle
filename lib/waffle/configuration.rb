@@ -4,7 +4,7 @@ module Waffle
   class Configuration
 
     def initialize(custom_params = {})
-      @configuration = {'strategy' => 'rabbitmq', 'url' => nil}
+      @configuration = {'transport' => 'rabbitmq', 'url' => nil, 'encoder' => 'json'}
 
       if defined? Rails
         @configuration.merge! YAML.load_file("#{Rails.root}/config/#{Rails.env}.waffle.yml")

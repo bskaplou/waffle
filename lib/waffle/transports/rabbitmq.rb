@@ -1,14 +1,19 @@
 require 'bunny'
 
 module Waffle
-  module Strategies
+  module Transports
     class Rabbitmq
 
       def initialize(configuration = nil)
         raise ArgumentError unless configuration && configuration.is_a?(Waffle::Configuration)
 
+        @configuration = configuration
         @bunny = Bunny.new configuration.url
         @bunny.start
+      end
+
+      def encoder
+        @encoder ||= eval("Waffle::Encoders::#{@configuration.encoder}")
       end
 
       def publish(flow = 'events', message = '')
@@ -22,7 +27,7 @@ module Waffle
         @queue.bind @exchange
 
         @queue.subscribe do |message|
-          yield Waffle::Utils.decode(message[:payload])
+          yield encoder.decode(message[:payload])
         end
       end
 
