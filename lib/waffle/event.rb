@@ -19,6 +19,10 @@ module Waffle
       @transport ||= Waffle::Base.new eval("Waffle::Strategies::#{config.strategy.capitalize}").new(config)
     end
 
+    def encoder
+      @encoder ||= eval("Waffle::Encoders::#{config.encoder.capitalize}")
+    end
+
     def occured(event_name = 'event', event_data = nil)
       unless event_data.is_a? Hash
         event_data = {'body' => event_data.to_s}
