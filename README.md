@@ -8,18 +8,20 @@ An abstract flow publisher and subscriber.
 
 Insert in your Rails Gemfile:
 
-    gem 'waffle', '~> 0.1.3'
+    gem 'waffle', '~> 0.2.1'
 
 and create config file:
 
     # production.waffle.yml
-    strategy: rabbitmq
+    transport: rabbitmq
+    encoder: marshal
     url: amqp://anyhost.com:5678
 
 or if RabbitMQ on local machine
 
     # production.waffle.yml
-    strategy: rabbitmq
+    transport: rabbitmq
+    encoder: marshal
 
 ## Usage
 

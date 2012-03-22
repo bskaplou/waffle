@@ -10,8 +10,6 @@ Gem::Specification.new do |s|
   s.authors  = ['Alexander Lomakin']
   s.email    = 'alexander.lomakin@gmail.com'
 
-  s.homepage = ''
-
   s.summary     = 'Abstract flow publisher and subscriber'
   s.description = 'Client part of Patty statistics server'
 
