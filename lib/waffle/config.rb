@@ -11,7 +11,13 @@ module Waffle
       @config_hash = {'transport' => 'rabbitmq', 'url' => nil, 'encoder' => 'json'}
 
       if defined? Rails
-        @config_hash.merge! YAML.load_file("#{Rails.root}/config/#{Rails.env}.waffle.yml")
+        if File.exists? "#{Rails.root}/config/waffle.yml"
+          loaded_config = YAML.load_file("#{Rails.root}/config/waffle.yml")
+
+          if loaded_config[Rails.env]
+            @config_hash.merge! loaded_config[Rails.env]
+          end
+        end
       end
     end
 

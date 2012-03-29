@@ -9,6 +9,7 @@ module Waffle
       def occured(*args)
         self.instance.occured(*args)
       end
+      alias :occurred :occured
     end
 
     def transport
