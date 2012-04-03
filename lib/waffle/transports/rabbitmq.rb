@@ -30,7 +30,7 @@ module Waffle
         end
 
         @queue.subscribe do |message|
-          yield message[:routing_key], encoder.decode(message[:payload])
+          yield message[:delivery_details][:routing_key], encoder.decode(message[:payload])
         end
       end
 
