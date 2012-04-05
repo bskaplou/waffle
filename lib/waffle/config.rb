@@ -10,15 +10,22 @@ module Waffle
     def initialize
       @config_hash = {'transport' => 'rabbitmq', 'url' => nil, 'encoder' => 'json'}
 
-      if defined? Rails
-        if File.exists? "#{Rails.root}/config/waffle.yml"
-          loaded_config = YAML.load_file("#{Rails.root}/config/waffle.yml")
+      filename = "config/waffle.yml"
 
-          if loaded_config[Rails.env]
-            @config_hash.merge! loaded_config[Rails.env]
-          end
+      if defined? Rails
+        fielname = "#{Rails.root}/config/waffle.yml"
+      end
+
+      if File.exists?(filename)
+        loaded_config = YAML.load_file filename
+
+        if defined?(Rails) && loaded_config[Rails.env]
+          @config_hash.merge! loaded_config[Rails.env]
+        else
+          @config_hash.merge! loaded_config
         end
       end
+
     end
 
     class << self
