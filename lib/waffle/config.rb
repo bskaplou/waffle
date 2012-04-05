@@ -10,7 +10,7 @@ module Waffle
     def initialize
       @config_hash = {'transport' => 'rabbitmq', 'url' => nil, 'encoder' => 'json'}
 
-      filename = File.join Dir.pwd, "config/waffle.yml"
+      filename = "config/waffle.yml"
 
       if defined? Rails
         fielname = "#{Rails.root}/config/waffle.yml"
