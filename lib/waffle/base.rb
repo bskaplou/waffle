@@ -6,11 +6,7 @@ module Waffle
     end
 
     def publish(flow = 'events', message = '')
-      begin
-        @transport.publish flow, message
-      rescue
-        nil
-      end
+      @transport.publish flow, message
     end
 
     def subscribe(flow = '', &block)
