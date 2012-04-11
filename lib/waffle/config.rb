@@ -11,6 +11,7 @@ module Waffle
       @config_hash = {'transport' => 'rabbitmq', 'url' => nil, 'encoder' => 'json'}
 
       filename = "config/waffle.yml"
+      filename = ENV['WAFFLE_CONFIG'] unless ENV['WAFFLE_CONFIG'].nil?
 
       if defined? Rails
         fielname = "#{Rails.root}/config/waffle.yml"
