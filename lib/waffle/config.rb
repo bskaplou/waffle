@@ -7,9 +7,8 @@ module Waffle
 
     attr_reader :config_hash
 
-    def initialize
+    def load_config!
       @config_hash = {'transport' => 'rabbitmq', 'url' => nil, 'encoder' => 'json'}
-
       filename = "config/waffle.yml"
       filename = ENV['WAFFLE_CONFIG'] unless ENV['WAFFLE_CONFIG'].nil?
 
@@ -26,12 +25,24 @@ module Waffle
           @config_hash.merge! loaded_config
         end
       end
-
+    end
+    
+    def config_hash
+      @config_hash ||= {}
     end
 
     class << self
+      def load_config!
+        self.instance.load_config!
+      end
+      
+      def setup! config
+        self.instance.config_hash.replace config
+        nil
+      end
 
       def method_missing(m, *args, &block)
+        self.load_config! if self.instance.config_hash.empty?
         if self.instance.config_hash.has_key?(m.to_s)
           self.instance.config_hash[m.to_s]
         else
