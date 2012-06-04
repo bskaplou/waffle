@@ -14,5 +14,5 @@ Gem::Specification.new do |s|
   s.description = 'Client part of Patty statistics server'
 
   s.files = `git ls-files`.split("\n")
-  s.add_dependency("rake", ["~> 2.6"])
+  s.add_dependency("rake")
 end
