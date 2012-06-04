@@ -1,19 +1,14 @@
 module Waffle
   module Encoders
-    class Marshal
-
-      class << self
-
-        def encode(message = nil)
-          ::Marshal.dump message
-        end
-
-        def decode(message = '')
-          ::Marshal.restore message
-        end
-
+    module Marshal
+      module_function
+      def encode message
+        ::Marshal.dump(message)
       end
 
+      def decode message
+        ::Marshal.restore(message)
+      end
     end
   end
 end

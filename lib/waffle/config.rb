@@ -1,60 +1,60 @@
-require 'singleton'
 require 'yaml'
 
 module Waffle
-  class Config
-    include Singleton
+  module Config
+    extend self
+    attr_accessor :settings, :defaults
 
-    attr_reader :config_hash
+    @settings = {}
+    @defaults = {}
 
-    def load_config!
-      @config_hash = default_config
-      filename = "config/waffle.yml"
-      filename = ENV['WAFFLE_CONFIG'] unless ENV['WAFFLE_CONFIG'].nil?
+    def option(name, options = {})
+      defaults[name] = settings[name] = options[:default]
 
-      if defined? Rails
-        fielname = "#{Rails.root}/config/waffle.yml"
+      class_eval <<-RUBY
+        def #{name}
+          settings[#{name.inspect}]
+        end
+
+        def #{name}=(value)
+          settings[#{name.inspect}] = value
+        end
+
+        def #{name}?
+          #{name}
+        end
+      RUBY
+    end
+
+    option :url, :default => nil
+    option :encoder, :default => 'json'
+    option :transport, :default => nil
+    option :connection_attempt_timeout, :default => 30
+
+    def load! options=nil
+      options[:path] ? load_from_yaml!(options[:path]) : load_from_hash!(options)
+      self
+    end
+
+    def load_from_yaml! filename
+      fielname = if defined?(Rails)
+        Rails.root.join('config', filename)
+      else
+        File.expand_path(File.join(File.dirname(__FILE__), "..", "config", filename))
       end
 
       if File.exists?(filename)
-        loaded_config = YAML.load_file filename
-
-        if defined?(Rails) && loaded_config[Rails.env]
-          @config_hash.merge! loaded_config[Rails.env]
-        else
-          @config_hash.merge! loaded_config
-        end
+        settings_hash = YAML.load_file(filename)[environment]
+        @settings = defaults.merge(settings_hash.symbolize_keys) if settings_hash
       end
+    end
+
+    def load_from_hash! options
+      @settings = defaults.merge(options)
     end
     
-    def config_hash
-      @config_hash ||= {}
+    def environment
+      defined?(Rails) && Rails.respond_to?(:env) ? Rails.env : (ENV['RACK_ENV'] || 'development')
     end
-    
-    def default_config
-      {'transport' => 'rabbitmq', 'url' => nil, 'encoder' => 'json'}
-    end
-
-    class << self
-      def load_config!
-        self.instance.load_config!
-      end
-      
-      def setup! config
-        self.instance.config_hash.replace(self.instance.default_config.merge(config))
-        nil
-      end
-
-      def method_missing(m, *args, &block)
-        self.load_config! if self.instance.config_hash.empty?
-        if self.instance.config_hash.has_key?(m.to_s)
-          self.instance.config_hash[m.to_s]
-        else
-          super
-        end
-      end
-
-    end
-
   end
 end

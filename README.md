@@ -2,13 +2,11 @@
 
 An abstract flow publisher and subscriber.
 
-[![Build Status](https://secure.travis-ci.org/peanut/waffle.png?branch=master)](http://travis-ci.org/peanut/waffle)
-
 ## Integration into Rails
 
-Insert in your Rails Gemfile:
+Insert in your Gemfile:
 
-    gem 'waffle'
+    gem 'waffle', :gem => 'git://github.com/undr/waffle.git'
 
 and create config file:
 
@@ -16,6 +14,26 @@ and create config file:
       transport: rabbitmq
       encoder: marshal
       url: amqp://anyhost.com:5678
+
+and load config file:
+
+    Waffle.configure(:path => 'config/waffle.yml')
+
+You also can configure Waffle programmatically:
+
+    Waffle.configure({
+      :transport => 'redis',
+      :url => 'redis://localhost:6379/0',
+      :encoder => 'json'
+    })
+
+or:
+
+    Waffle.configure do |config|
+      config.transport = 'redis'
+      config.url = 'redis://localhost:6379/0'
+      config.encoder = 'json'
+    end
 
 ## Usage
 
