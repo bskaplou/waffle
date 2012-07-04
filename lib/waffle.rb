@@ -43,11 +43,11 @@ module Waffle
   end
 
   def transport
-    @transport ||= "Waffle::Transports::#{Waffle.config.transport.capitalize}".constantize.new
+    @transport ||= "Waffle::Transports::#{Waffle.config.transport.camelize}".constantize.new
   end
 
   def encoder
-    @encoder ||= "Waffle::Encoders::#{Waffle.config.encoder.capitalize}".constantize
+    @encoder ||= "Waffle::Encoders::#{Waffle.config.encoder.camelize}".constantize
   end
 
   alias :config :configure
@@ -64,6 +64,11 @@ unless defined?(ActiveSupport::Inflector)
         constant = constant.const_defined?(name) ? constant.const_get(name) : constant.const_missing(name)
       end
       constant
+    end
+
+    def camelize
+      string = sub(/^[a-z\d]*/){$&.capitalize}
+      string.gsub(/(?:_|(\/))([a-z\d]*)/){ "#{$1}#{$2.capitalize}" }.gsub('/', '::')
     end
   end
 end
