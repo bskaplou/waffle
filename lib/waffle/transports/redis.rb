@@ -1,5 +1,3 @@
-require 'bunny'
-
 module Waffle
   module Transports
     class Redis
