@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.name    = 'waffle'
   s.version = Waffle::VERSION
 
-  s.homepage = 'http://github.com/peanut/waffle'
-  s.authors  = ['Alexander Lomakin']
+  s.homepage = 'http://github.com/undr/waffle'
+  s.authors  = ['Alexander Lomakin', 'Andrey Lepeshkin']
   s.email    = 'alexander.lomakin@gmail.com'
 
   s.summary     = 'Abstract flow publisher and subscriber'

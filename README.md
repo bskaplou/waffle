@@ -2,6 +2,8 @@
 
 An abstract flow publisher and subscriber.
 
+[![Build Status](https://secure.travis-ci.org/undr/waffle.png?branch=master)](http://travis-ci.org/undr/waffle)
+
 ## Integration into Rails
 
 Insert in your Gemfile:
