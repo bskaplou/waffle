@@ -11,12 +11,12 @@ describe Waffle::Event do
     end
     
     context do
-      let(:message){'{"key1":"value1","key2":"value2","occured_at":"' + now.to_s + '"}'}
+      let(:message){{"key1" => "value1", "key2" => "value2", "occured_at" => now}}
       specify{Waffle::Event.occured(flow, {'key1' => 'value1', 'key2' => 'value2'})}
     end
     
     context do
-      let(:message){'{"body":"message data","occured_at":"' + now.to_s + '"}'}
+      let(:message){{"body" => "message data", "occured_at" => now}}
       specify{Waffle::Event.occured(flow, 'message data')}
     end
   end

@@ -9,6 +9,7 @@ require 'time'
 module Waffle
   extend self
   module Transports
+    autoload :Base, 'waffle/transports/base'
     autoload :Rabbitmq, 'waffle/transports/rabbitmq' if defined?(Bunny)
     autoload :Redis, 'waffle/transports/redis' if defined?(::Redis)
   end
@@ -27,7 +28,7 @@ module Waffle
 
   def configure options=nil
     @configured ||= begin
-      options = {:path => 'waffle.yml'} unless options
+      options = {:path => 'config/waffle.yml'} unless options
       Config.load!(options)
       true
     end
@@ -36,10 +37,17 @@ module Waffle
 
   def publish flow = 'events', message = ''
     transport.publish(flow, message)
+  rescue Bunny::ConnectionError, Errno::ECONNRESET => e
+    transport.reconnect && retry if transport.ready_to_connect?
   end
 
   def subscribe flow = '', &block
     transport.subscribe(flow, &block)
+  rescue Bunny::ConnectionError, Errno::ECONNRESET => e
+    until transport.reconnect do
+      sleep(config.connection_attempt_timeout)
+    end
+    retry
   end
 
   def transport
@@ -81,7 +89,7 @@ unless defined?(ActiveSupport)
       end
       self
     end
-    
+
     def symbolize_keys
       dup.symbolize_keys!
     end

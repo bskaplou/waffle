@@ -3,25 +3,11 @@ require 'bunny'
 
 module Waffle
   module Transports
-    class Rabbitmq
-
+    class Rabbitmq < Base
       EXCHANGE = 'events'
 
-      @@last_connection_attempt = Time.now
-
-      def initialize
-        @bunny = Bunny.new(Waffle.config.url)
-        connect!
-      end
-
       def publish(flow = 'events', message = '')
-        begin
-          exchange.publish(message, :key => flow)
-        rescue
-          if (Time.now - @@last_connection_attempt) > Waffle.config.connection_attempt_timeout
-            connect!
-          end
-        end
+        exchange.publish(Waffle.encoder.encode(message), :key => flow)
       end
 
       def subscribe(flow = 'events')
@@ -45,13 +31,11 @@ module Waffle
         @queue ||= @bunny.queue('', :durable => true, :auto_delete => true)
       end
 
-      def connect!
-        begin
-          @@last_connection_attempt = Time.now
-          @bunny.start
-        rescue
-          nil
-        end
+      def do_connect
+        @exchange = nil
+        @queue = nil
+        @bunny = Bunny.new(Waffle.config.url)
+        @bunny.start
       end
     end
   end

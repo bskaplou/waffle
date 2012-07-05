@@ -37,11 +37,8 @@ module Waffle
     end
 
     def load_from_yaml! filename
-      fielname = if defined?(Rails)
-        Rails.root.join('config', filename)
-      else
-        File.expand_path(File.join(File.dirname(__FILE__), "..", "config", filename))
-      end
+      filename = Rails.root.join(filename) if defined?(Rails)
+      filename = File.expand_path(filename)
 
       if File.exists?(filename)
         settings_hash = YAML.load_file(filename)[environment]

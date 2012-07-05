@@ -15,7 +15,7 @@ describe Waffle::Transports::Rabbitmq do
   end
 
   describe '.publish' do
-    before{exchange.should_receive(:publish)}
+    before{exchange.should_receive(:publish).with('"message"', :key => 'events')}
     specify{subject.publish('events', 'message')}
   end
 

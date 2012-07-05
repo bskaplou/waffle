@@ -8,7 +8,7 @@ module Waffle
 
         event_data.merge!({'occured_at' => Time.now})
 
-        Waffle.publish(event_name, Waffle.encoder.encode(event_data))
+        Waffle.publish(event_name, event_data)
       end
       alias :occurred :occured
     end

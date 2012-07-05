@@ -1,0 +1,8 @@
+production: &base
+  transport: rabbitmq
+  encoder: json
+  url: 'amqp://localhost:5672'
+development:
+  <<: *base
+test:
+  <<: *base

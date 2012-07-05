@@ -15,7 +15,7 @@ describe Waffle::Transports::Redis do
   end
 
   describe '.publish' do
-    before{redis.should_receive(:publish).with('events', 'message')}
+    before{redis.should_receive(:publish).with('events', '"message"')}
     specify{subject.publish('events', 'message')}
   end
 

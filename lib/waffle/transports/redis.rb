@@ -1,22 +1,10 @@
 module Waffle
   module Transports
-    class Redis
-      @@last_connection_attempt = Time.now
-
+    class Redis < Base
       attr_reader :db
 
-      def initialize
-        connect!
-      end
-
       def publish(flow = 'events', message = '')
-        begin
-          db.publish(flow, message)
-        rescue
-          if (Time.now - @@last_connection_attempt) > Waffle.config.connection_attempt_timeout
-            connect!
-          end
-        end
+        db.publish(flow, Waffle.encoder.encode(message))
       end
 
       def subscribe(flow = 'events')
@@ -25,14 +13,9 @@ module Waffle
         end
       end
 
-      private
-      def connect!
-        begin
-          @@last_connection_attempt = Time.now
-          @db = ::Redis.new(:url => Waffle.config.url)
-        rescue
-          nil
-        end
+      protected
+      def do_connect
+        @db = ::Redis.new(:url => Waffle.config.url)
       end
     end
   end
