@@ -8,9 +8,15 @@ module Waffle
       end
 
       def subscribe(flow = 'events')
-        db.subscribe(*flow) do |channel, message|
-          yield(channel, Waffle.encoder.decode(message))
+        db.subscribe(*flow) do |on|
+          on.message do |channel, message|
+            yield(channel, Waffle.encoder.decode(message))
+          end
         end
+      end
+
+      def connection_exceptions
+        [Errno::ECONNREFUSED, Errno::ECONNRESET]
       end
 
       protected

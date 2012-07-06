@@ -22,6 +22,10 @@ module Waffle
         end
       end
 
+      def connection_exceptions
+        [Bunny::ServerDownError, Bunny::ConnectionError, Errno::ECONNRESET]
+      end
+
       private
       def exchange
         @exchange ||= @bunny.exchange(EXCHANGE)

@@ -37,13 +37,13 @@ module Waffle
 
   def publish flow = 'events', message = ''
     transport.publish(flow, message)
-  rescue Bunny::ServerDownError, Bunny::ConnectionError, Errno::ECONNRESET => e
+  rescue *transport.connection_exceptions => e
     transport.reconnect && retry if transport.ready_to_connect?
   end
 
   def subscribe flow = '', &block
     transport.subscribe(flow, &block)
-  rescue Bunny::ServerDownError, Bunny::ConnectionError, Errno::ECONNRESET => e
+  rescue *transport.connection_exceptions => e
     until transport.reconnect do
       sleep(config.connection_attempt_timeout)
     end
