@@ -9,6 +9,7 @@ describe Waffle::Transports::Redis do
   subject{Waffle::Transports::Redis.new}
 
   let(:redis){mock(:redis)}
+  let(:subscription){mock(:subscription)}
 
   before do
     subject.stub(:db => redis)
@@ -20,7 +21,10 @@ describe Waffle::Transports::Redis do
   end
 
   describe '.subscribe' do
-    before{redis.should_receive(:subscribe).with('events').and_yield('event', '{"data":"message"}')}
+    before do
+      redis.should_receive(:subscribe).with('events').and_yield(subscription)
+      subscription.should_receive(:message).and_yield('event', '{"data":"message"}')
+    end
     specify{subject.subscribe('events'){}}
   end
 end
