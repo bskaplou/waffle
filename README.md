@@ -4,7 +4,12 @@ An abstract flow publisher and subscriber.
 
 [![Build Status](https://secure.travis-ci.org/undr/waffle.png?branch=master)](http://travis-ci.org/undr/waffle)
 
-## Integration into Rails
+It supports the following transports: 
+
+- RabbitMQ.
+- Redis. 
+
+## Configuration
 
 Insert in your Gemfile:
 
@@ -39,6 +44,8 @@ or:
 
 ## Usage
 
+### Event 
+
 When you want to performan event, just insert this code in place, where it must occur:
 
     Waffle::Event.occurred 'index_page_load'
@@ -50,3 +57,16 @@ You can attach meta data to event like this:
 or like this:
 
     Waffle::Event.occurred 'index_page_load', 'bingo!'
+
+### Pub/Sub
+
+    Waffle.publish('event.name', message_hash_or_string)
+    
+    Waffle.subscribe('event.name') do |message_type, message_hash_or_string|
+      pp message_type
+      pp message_hash_or_string
+    end
+
+### Reconnect
+
+Don't care about any reconnects when transport server is down. Waffle just waits for server ready and reconnects automatically.
