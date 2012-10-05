@@ -3,14 +3,15 @@ module Waffle
     class Redis < Base
       attr_reader :db
 
-      def publish(flow = 'events', message = '')
-        db.publish(flow, Waffle.encoder.encode(message))
+      protected
+      def publish_impl(flow = 'events', message = '')
+        db.publish(flow, encoder.encode(message))
       end
 
-      def subscribe(flow = 'events')
+      def subscribe_impl(flow = 'events')
         db.subscribe(*flow) do |on|
           on.message do |channel, message|
-            yield(channel, Waffle.encoder.decode(message))
+            yield(channel, encoder.decode(message))
           end
         end
       end
@@ -19,9 +20,8 @@ module Waffle
         [Errno::ECONNREFUSED, Errno::ECONNRESET]
       end
 
-      protected
       def do_connect
-        @db = ::Redis.new(:url => Waffle.config.url)
+        @db = ::Redis.new(:url => config.url)
       end
     end
   end

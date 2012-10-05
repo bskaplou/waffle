@@ -1,13 +1,12 @@
 require 'spec_helper'
 
-class Waffle::Transports::Redis
-  def initialize
-  end
-end
+#class Waffle::Transports::Redis
+#end
 
 describe Waffle::Transports::Redis do
-  subject{Waffle::Transports::Redis.new}
+  subject{Waffle::Transports::Redis.new(config)}
 
+  let(:config){Waffle::Config::Node.new({})}
   let(:redis){mock(:redis)}
   let(:subscription){mock(:subscription)}
 

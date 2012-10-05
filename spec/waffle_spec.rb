@@ -19,9 +19,9 @@ describe Waffle do
         YAML.stub(:load_file => config_hash)
         File.stub(:exists? => true)
         Waffle::Config.stub(:environment => 'development')
+        Waffle.configure
       end
 
-      specify{Waffle.configure.should == Waffle::Config}
       specify{Waffle.config.should == Waffle::Config}
       specify{Waffle.config.transport.should == 'redis'}
       specify{Waffle.config.encoder.should == 'json'}
@@ -31,8 +31,10 @@ describe Waffle do
 
     context "when a block is supplied" do
       before do
-        Waffle.configure do |config|
-          config.transport = 'redis'
+        Waffle.configure do
+          default do |config|
+            config.transport = 'redis'
+          end
         end
       end
 
@@ -48,7 +50,8 @@ describe Waffle do
   
   context do
     before do
-      Waffle.stub(:transport => transport)
+      Waffle.configure
+      Waffle::Config.stub(:queues => {:default => transport})
     end
 
     let(:transport){mock(:transport)}
@@ -65,10 +68,10 @@ describe Waffle do
 
     describe '#subscribe' do
       before do
-        transport.should_receive(:subscribe).with('flow').and_yield
+        transport.should_receive(:subscribe).with('flow')
       end
 
-      specify{Waffle.subscribe('flow'){}}
+      specify{Waffle.subscribe('flow')}
     end
   end
 end

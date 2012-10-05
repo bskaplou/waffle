@@ -1,14 +1,13 @@
 require 'spec_helper'
 
-class Waffle::Transports::Rabbitmq
-  def initialize
-  end
-end
+#class Waffle::Transports::Rabbitmq
+#end
 
 describe Waffle::Transports::Rabbitmq do
-  subject{Waffle::Transports::Rabbitmq.new}
+  subject{Waffle::Transports::Rabbitmq.new(config)}
 
   let(:exchange){mock(:exchange)}
+  let(:config){Waffle::Config::Node.new({})}
 
   before do
     subject.stub(:exchange => exchange)

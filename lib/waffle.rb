@@ -7,15 +7,24 @@ require 'waffle/version'
 require 'time'
 
 module Waffle
-  extend self
+  extend self 
   module Transports
     autoload :Base, 'waffle/transports/base'
     autoload :Rabbitmq, 'waffle/transports/rabbitmq' if defined?(Bunny)
     autoload :Redis, 'waffle/transports/redis' if defined?(::Redis)
+
+    module_function
+    def create config
+      "Waffle::Transports::#{config.transport.camelize}".constantize.new(config)
+    end
   end
 
   autoload :Config, 'waffle/config'
   autoload :Event, 'waffle/event'
+
+  class Config
+    autoload :Node, 'waffle/config'
+  end
 
   module Encoders
     autoload :Json, 'waffle/encoders/json' if defined?(Yajl)
@@ -23,42 +32,33 @@ module Waffle
   end
 
   def reset_config!
-    @configured = false
+    config.reset_config! if config
   end
 
-  def configure options=nil
-    @configured ||= begin
+  def configure options = nil, &block
+    if block_given?
+      Config.class_eval(&block)
+    else
       options = {:path => 'config/waffle.yml'} unless options
       Config.load!(options)
-      true
     end
-    block_given? ? yield(Config) : Config
   end
 
-  def publish flow = 'events', message = ''
-    transport.publish(flow, message)
-  rescue *transport.connection_exceptions => e
-    transport.reconnect && retry if transport.ready_to_connect?
+  def config
+    Config if Config.configured?
   end
 
-  def subscribe flow = '', &block
-    transport.subscribe(flow, &block)
-  rescue *transport.connection_exceptions => e
-    until transport.reconnect do
-      sleep(config.connection_attempt_timeout)
+  def queue name = :default
+    config.queues[name] or raise "Transport '#{name}' is not configured"
+  end
+
+  def method_missing meth, *args
+    if Config.configured?
+      config.queues[:default].send(meth, *args)
+    else
+      super
     end
-    retry
   end
-
-  def transport
-    @transport ||= "Waffle::Transports::#{Waffle.config.transport.camelize}".constantize.new
-  end
-
-  def encoder
-    @encoder ||= "Waffle::Encoders::#{Waffle.config.encoder.camelize}".constantize
-  end
-
-  alias :config :configure
 end
 
 unless defined?(ActiveSupport::Inflector)
