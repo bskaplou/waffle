@@ -52,6 +52,16 @@ module Waffle
     config.queues[name] or raise "Transport '#{name}' is not configured"
   end
 
+  def publish flow = 'events', message = ''
+    raise "Waffle is not configured" unless Config.configured?
+    config.queues[:default].publish(flow, message)
+  end
+
+  def subscribe flow = '', &block
+    raise "Waffle is not configured" unless Config.configured?
+    config.queues[:default].subscribe(flow, &block)
+  end
+
   def method_missing meth, *args
     if Config.configured?
       config.queues[:default].send(meth, *args)
