@@ -11,7 +11,7 @@ module Waffle
         exchange.publish(encoder.encode(message), :key => flow)
       end
 
-      def subscribe_impl(flow = 'events')
+      def subscribe_impl(flow = 'events', &block)
         if flow.is_a?(Array)
           flow.each{|f| queue.bind(exchange, :key => f)}
         else
@@ -19,7 +19,7 @@ module Waffle
         end
 
         queue.subscribe do |message|
-          yield(message[:delivery_details][:routing_key], encoder.decode(message[:payload]))
+          block.call(message[:delivery_details][:routing_key], encoder.decode(message[:payload]))
         end
       end
 
