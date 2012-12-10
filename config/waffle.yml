@@ -1,0 +1,17 @@
+production: &base
+  transport: rabbitmq
+  encoder: json
+  url: 'amqp://localhost:5672'
+  queues:
+    rabbitmq_name:
+      transport: rabbitmq
+      encoder: json
+      url: 'amqp://localhost:5673'
+    redis_name:
+      transport: redis
+      encoder: json
+      url: 'redis://localhost:6379/0'
+development:
+  <<: *base
+test:
+  <<: *base

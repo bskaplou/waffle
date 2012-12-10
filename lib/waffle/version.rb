@@ -1,5 +1,3 @@
 module Waffle
-
-  VERSION = '0.3.5'
-
+  VERSION = '0.5.1'
 end

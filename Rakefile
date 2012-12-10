@@ -1,8 +1,10 @@
-require 'rake/testtask'
+require 'rake'
+$LOAD_PATH.unshift File.expand_path("../..", __FILE__)
+Dir[File.join('lib', 'tasks', '**', '*.rake')].each{|file| load file}
+Bundler::GemHelper.install_tasks
 
-Rake::TestTask.new do |t|
-  t.libs << 'test'
-end
+require 'rspec/core'
+require 'rspec/core/rake_task'
 
-desc "Run tests"
-task :default => :test
+RSpec::Core::RakeTask.new(:spec)
+task :default => [:spec]
